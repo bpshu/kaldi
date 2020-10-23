@@ -57,14 +57,14 @@ int main(int argc, char *argv[]) {
         "From kaldi nnet3 neural-net acoustic model file to transition model and our dnn\n"
         "Usage:  nnet3-conversion [options] <nnet-in> <transition model-out> <nnet-out>\n"
         "e.g.:\n"
-        "nnet3-split --binary_write=false --print_nnet_info=false final.mdl tran.mdl final.nnet\n";
+        "nnet3-split --print_nnet_info=false --binary_write=false final.mdl tran.mdl final.nnet\n";
         
         bool binary_write = true;
         bool print_nnet_info = false;
         
         ParseOptions po(usage);
+        po.Register("print_nnet_info", &print_nnet_info, "print input-am-nnet info");
         po.Register("binary_write", &binary_write, "Write output in binary mode");
-        po.Register("print_nnet_info", &print_nnet_info, "Write output in binary mode");
 
         po.Read(argc, argv);
         
