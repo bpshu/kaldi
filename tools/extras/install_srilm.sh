@@ -19,7 +19,7 @@ if [ ! -f srilm.tgz ]; then
   echo way because you need to put your address in a download form.
   echo Please download SRILM from http://www.speech.sri.com/projects/srilm/download.html
   echo put it in ./srilm.tgz, then run this script.
-  exit 1
+  #exit 1
 fi
 
 ! which gawk 2>/dev/null && \
@@ -27,7 +27,7 @@ fi
 
 mkdir -p srilm
 cd srilm
-tar -xvzf ../srilm.tgz
+#tar -xvzf ../srilm.tgz
 
 major=`awk -F. '{ print $1 }' RELEASE`
 minor=`awk -F. '{ print $2 }' RELEASE`
