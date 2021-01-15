@@ -86,12 +86,23 @@ int main(int argc, char *argv[]) {
         }
         if(print_nnet_info)
             KALDI_LOG << am_nnet.Info();
-        // {
-        //     bool b = false;
-        //     Output ki2("./tmp/final.mdl.txt", &b);
-        //     am_nnet.Write(ki2.Stream(), b);    
-        // }
+        
+        {
+            bool prepare_for_test = true;
+            if (prepare_for_test) {
+                SetBatchnormTestMode(true, &am_nnet.GetNnet());
+                SetDropoutTestMode(true, &am_nnet.GetNnet());
+                CollapseModel(CollapseModelConfig(), &am_nnet.GetNnet());
+            }
+        }
+        
+        {
+            bool b = false;
+            Output ki2("final.mdl.txt", &b);
+            am_nnet.Write(ki2.Stream(), b);    
+        }
 
+        
         Nnet nnet = am_nnet.GetNnet();
         const VectorBase<BaseFloat>& prior = am_nnet.Priors();
         SetBatchnormTestMode(true, &nnet);
@@ -109,8 +120,13 @@ int main(int argc, char *argv[]) {
         assert(name == "lda.tdnn1.affine");
         std::vector<std::vector<float>> W;
         std::vector<float> B;
+        std::ofstream f2("2");
+        nnet.GetComponent(ncomponent-1)->Write(f2, false);
         AffineComponent* affine = dynamic_cast<AffineComponent*>(nnet.GetComponent(ncomponent-1));
+        std::ofstream f1("1");
+        affine->LinearParams().Write(f1, false);
         GetParameters(affine->LinearParams(), affine->BiasParams(), &W, &B);
+        KALDI_LOG << W[0][1];
         new_nnet.AddLayer(new DNN::Tdnn(W, B, {-2,-1,0,1,2}, DNN::ACTIVATION_TYPE::RELU, true)); // tdnn1
         //first get the last component
         for(int i = 0; i < ncomponent - 1; ++i){

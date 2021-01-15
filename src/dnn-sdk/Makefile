@@ -1,7 +1,6 @@
-include ../Config.mk
+include ../kaldi.mk
 CXX = g++
 CXXFLAGS += -std=c++11 $(INCLUDE)\
-           -mavx -mavx2 \
            $(MCRO) $(EXTRA) 
 ifeq ($(CUDA), true)
     RFLAGS += $(CUDA_LDFLAGS) $(CUDA_LDLIBS) 
@@ -9,7 +8,7 @@ endif
 OBJDIR = .
 ADDLIBS =
 LIBNAME = libdnn
-LIBFILE = $(LIBNAME).a
+LIBFILE = $(LIBNAME).dylib
 CPPSOURCE = $(wildcard *.cpp)
 OBJFILES = $(patsubst %cpp, $(OBJDIR)/%o, $(CPPSOURCE))
 CUSOURCE = $(wildcard *.cu)
